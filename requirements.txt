@@ -1,0 +1,9 @@
+fastapi==0.95.2
+uvicorn==0.22.0
+python-multipart==0.0.6
+pymupdf==1.22.5
+sentence-transformers==2.2.2
+transformers==4.36.2
+sentencepiece==0.1.98
+torch>=2.0.0
+scikit-learn

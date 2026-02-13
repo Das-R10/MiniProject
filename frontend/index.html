@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Legal Clause Analyzer — Easy Mode</title>
+<style>
+  .goog-logo-link,
+  .goog-te-gadget span {
+    display: none !important;
+  }
+
+  .goog-te-banner-frame {
+    display: none !important;
+  }
+
+  body {
+    top: 0 !important;
+  }
+
+  :root{
+    --bg:#ffffff;
+    --card:#fcfcff;
+    --accent:#1f2937;        /* dark slate */
+    --primary:#0b5ed7;       /* bright blue */
+    --danger:#c62828;        /* red */
+    --ok:#117a65;            /* green */
+    --muted:#6b7280;
+    --big:20px;
+  }
+
+  html,body { height:100%; margin:0; font-family: "Segoe UI", Roboto, Arial, sans-serif; background:var(--bg); color:var(--accent); -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:980px; margin:20px auto; padding:18px; }
+  header { display:flex; gap:16px; align-items:center; margin-bottom:12px; }
+  .logo { width:72px; height:72px; border-radius:12px; background:linear-gradient(135deg,#0b5ed7,#6dd3ff); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:22px; }
+  h1 { margin:0; font-size:28px; line-height:1.05; }
+  p.lead { margin:6px 0 18px; font-size:18px; color:var(--muted); max-width:760px; }
+
+  /* Upload area */
+  .uploader { border:3px dashed #dbeafe; background:linear-gradient(180deg,#ffffff,#f8fbff); padding:18px; border-radius:12px; display:flex; gap:16px; align-items:center; }
+  .drop { flex:1; padding:12px; min-height:120px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; text-align:center; }
+  .drop p { margin:0; font-size:18px; color:var(--accent); }
+  .hint { margin-top:8px; color:var(--muted); font-size:15px; }
+
+  input[type=file] { display:none; }
+
+  .actions { display:flex; gap:12px; align-items:center; }
+  button.big { background:var(--primary); color:white; border:none; padding:14px 18px; border-radius:10px; font-size:18px; cursor:pointer; }
+  button.secondary { background:white; color:var(--primary); border:2px solid var(--primary); padding:12px 16px; border-radius:10px; font-size:16px; cursor:pointer; }
+  button.big:active, button.secondary:active { transform:translateY(1px); }
+
+  /* progress */
+  .status { margin-top:12px; display:flex; gap:12px; align-items:center; font-size:17px; }
+  .spinner { width:26px; height:26px; border-radius:50%; border:4px solid #e6eefc; border-top-color:var(--primary); animation:spin 1s linear infinite; display:inline-block; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* Results */
+  .results { margin-top:22px; display:flex; flex-direction:column; gap:14px; }
+  .summary { background:var(--card); padding:12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .summary .left { font-size:18px; }
+  .summary .right { display:flex; gap:8px; align-items:center; }
+
+  .clause-card { background:linear-gradient(180deg,#ffffff,#fbfdff); border:2px solid #eef4ff; padding:16px; border-radius:10px; display:flex; gap:14px; align-items:flex-start; }
+  .clause-meta { width:120px; min-width:120px; text-align:center; }
+  .clause-id { font-size:22px; font-weight:700; color:var(--accent); }
+  .clause-section { color:var(--muted); font-size:15px; margin-top:6px; }
+  .clause-body { flex:1; font-size:18px; color:var(--accent); line-height:1.45; }
+  .clause-body small { display:block; color:var(--muted); margin-top:8px; font-size:15px; }
+
+  .label { display:inline-block; padding:8px 12px; border-radius:8px; font-weight:700; color:white; font-size:15px; margin-top:6px; }
+  .label.neutral { background:#6b7280; }
+  .label.pro { background:var(--ok); }
+  .label.con { background:var(--danger); }
+
+  .amend { margin-top:10px; padding:10px; background:#f6f9ff; border-radius:8px; border:1px dashed #dbeafe; font-size:16px; color:var(--accent); }
+
+  /* Download & speak */
+  .tools { display:flex; gap:12px; margin-top:10px; }
+  .download { background:#0b5ed7; color:white; padding:10px 14px; border-radius:8px; border:none; font-size:16px; cursor:pointer; }
+
+  /* Large-friendly adjustments */
+  @media (max-width:760px){
+    .clause-meta { display:none; }
+    .clause-card { flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <header>
+      <div class="logo" aria-hidden="true">LA</div>
+      <div>
+        <h1>Legal Clause Analyzer</h1>
+        <p class="lead">Upload a short employment agreement or similar. The system finds risky clauses and suggests safe behavior. <strong style="font-size:16px">(Easy mode for everyone)</strong></p>
+      </div>
+      <!-- Language Selector -->
+      <div style="margin:12px 0; display:flex; gap:12px; align-items:center;">
+        <label for="langSelect" style="font-size:18px; font-weight:600;">
+          🌐 Choose Language:
+        </label>
+        <select id="langSelect" onchange="setPageLanguage(this.value)"
+          style="font-size:18px; padding:8px; border-radius:8px;">
+          <option value="">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+        </select>
+
+        <script>
+        function setPageLanguage(lang) {
+          if (!lang) {
+            // reset to English
+            location.reload();
+            return;
+          }
+
+          const select = document.querySelector('select.goog-te-combo');
+          if (!select) {
+            alert("Translator not ready yet. Please try again.");
+            return;
+          }
+
+          select.value = lang;
+          select.dispatchEvent(new Event('change'));
+        }
+        </script>
+
+
+      </div>
+
+      <!-- Google Translate -->
+      <div id="google_translate_element" style="display:none;"></div>
+
+      <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: 'hi,bn,or,ta,te,mr,gu,pa,ur',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+          },
+          'google_translate_element'
+        );
+      }
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+    </header>
+
+    <section class="uploader" aria-labelledby="upload-label">
+      <div class="drop" id="dropzone" tabindex="0" role="button" aria-pressed="false" aria-label="Upload file">
+        <p style="font-size:20px">📁 Choose or drop file here</p>
+        <p class="hint">Supported: <strong>PDF</strong> or <strong>TXT</strong> — simple language documents work best.</p>
+        <p class="hint" style="font-weight:700; margin-top:8px;">Large text, clear language — wait 10–30 seconds after upload.</p>
+      </div>
+
+      <div style="width:220px; display:flex; flex-direction:column; gap:8px;">
+        <input id="fileInput" type="file" accept=".pdf,.txt" />
+        <button id="chooseBtn" class="big" aria-label="Choose file">Choose file</button>
+        <button id="uploadBtn" class="secondary" aria-label="Upload and process">Upload & Process</button>
+
+        <div class="status" id="statusBox" aria-live="polite" style="display:none;">
+          <span class="spinner" id="spinner"></span>
+          <span id="statusText">Processing…</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="results" id="results" aria-live="polite" style="display:none;"></div>
+
+    <footer style="margin-top:22px; color:var(--muted); font-size:15px;">
+      <strong>Tips:</strong> Use large font view in your browser (Ctrl+Plus). If speech is helpful, press the 🔊 icon on each clause card.
+    </footer>
+  </div>
+
+<script>
+(function(){
+  const drop = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const chooseBtn = document.getElementById('chooseBtn');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const statusBox = document.getElementById('statusBox');
+  const spinner = document.getElementById('spinner');
+  const statusText = document.getElementById('statusText');
+  const resultsDiv = document.getElementById('results');
+
+  let selectedFile = null;
+
+  // Drag & drop UX
+  drop.addEventListener('click', ()=> fileInput.click());
+  drop.addEventListener('keydown', (e)=> { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+
+  drop.addEventListener('dragover', (e)=> { e.preventDefault(); drop.style.borderColor='#93c5fd'; });
+  drop.addEventListener('dragleave', (e)=> { e.preventDefault(); drop.style.borderColor=''; });
+  drop.addEventListener('drop', (e)=> {
+    e.preventDefault();
+    drop.style.borderColor='';
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) { fileInput.files = e.dataTransfer.files; selectedFile = f; }
+  });
+
+  chooseBtn.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', ()=> {
+    selectedFile = fileInput.files[0];
+    if(selectedFile) {
+      drop.querySelector('p').textContent = '📁 ' + selectedFile.name;
+    }
+  });
+
+  uploadBtn.addEventListener('click', () => {
+    if(!fileInput.files.length) { alert('Please choose a file first.'); return; }
+    uploadFile(fileInput.files[0]);
+  });
+
+  async function uploadFile(file) {
+    // UX: show spinner
+    resultsDiv.style.display='none';
+    statusBox.style.display='flex';
+    statusText.textContent = 'Uploading file… (may take a few seconds)';
+    spinner.style.display='inline-block';
+
+    const fd = new FormData();
+    fd.append('file', file);
+
+    try {
+      const res = await fetch('/upload', { method:'POST', body: fd });
+      if(!res.ok) {
+        const txt = await res.text();
+        showError('Server error: ' + (txt || res.statusText));
+        return;
+      }
+      statusText.textContent = 'Processing document (this can take 10–30s on CPU)…';
+      const data = await res.json();
+      renderResults(data);
+    } catch (err) {
+      showError('Network error: ' + err.toString());
+    } finally {
+      spinner.style.display='none';
+      statusBox.style.display='none';
+    }
+  }
+
+  function showError(msg){
+    statusText.textContent = msg;
+    alert(msg);
+    statusBox.style.display='none';
+  }
+
+  function renderResults(data){
+    resultsDiv.innerHTML = '';
+    resultsDiv.style.display='block';
+
+    // Summary
+    const sum = document.createElement('div');
+    sum.className = 'summary';
+    sum.innerHTML = `<div class="left">✅ Clauses found: <strong style="font-size:20px">${data.num_clauses}</strong></div>
+                     <div class="right">
+                       <button class="download" id="downloadBtn">Download JSON</button>
+                     </div>`;
+    resultsDiv.appendChild(sum);
+
+    document.getElementById('downloadBtn').addEventListener('click', ()=> {
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'analysis.json'; document.body.appendChild(a); a.click();
+      a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // For each clause: show card
+    data.results.forEach(r => {
+      const clause = data.clauses.find(c => c.clause_id === r.clause_id) || {};
+      const card = document.createElement('div');
+      card.className = 'clause-card';
+
+      const meta = document.createElement('div');
+      meta.className = 'clause-meta';
+      meta.innerHTML = `<div class="clause-id">${r.clause_id}</div>
+                        <div class="clause-section">${clause.section || 'Unknown'}</div>
+                        <div style="margin-top:8px">
+                          <span class="label ${r.label.toLowerCase()}">${r.label}</span>
+                        </div>
+                        <div style="margin-top:8px; color:var(--muted); font-weight:600">${(r.confidence*100).toFixed(0)}%</div>`;
+
+      const body = document.createElement('div');
+      body.className = 'clause-body';
+      body.innerHTML = `<div><strong>Original:</strong> ${escapeHtml(r.original || '')}</div>`;
+      if(r.amended && r.amended !== '[No safe automatic amendment generated]') {
+        const am = document.createElement('div');
+        am.className = 'amend';
+        am.innerHTML = `<strong>Suggested amendment:</strong><div style="margin-top:6px">${escapeHtml(r.amended)}</div>`;
+        body.appendChild(am);
+      } else if (r.amended === '[No safe automatic amendment generated]') {
+        const am = document.createElement('div');
+        am.className = 'amend';
+        am.innerHTML = `<strong>Suggestion:</strong> <div style="margin-top:6px; color:var(--muted)">No safe automatic amendment was generated. A legal expert review is recommended.</div>`;
+        body.appendChild(am);
+      }
+
+      const tools = document.createElement('div');
+      tools.className = 'tools';
+      const translateBtn = document.createElement('button');
+      translateBtn.className = 'secondary';
+      translateBtn.textContent = '🌐 Translate';
+      translateBtn.addEventListener('click', () => {
+        const lang = document.getElementById('langSelect').value;
+        if (!lang) {
+          alert("Please choose a language from the top first");
+          return;
+        }
+        setPageLanguage(lang);
+      });
+
+      tools.appendChild(translateBtn);
+
+      const speakBtn = document.createElement('button');
+      speakBtn.className = 'secondary';
+      speakBtn.textContent = '🔊 Read aloud';
+      speakBtn.addEventListener('click', () => {
+        const textToSpeak = body.innerText || r.original;
+        speakText(textToSpeak);
+      });
+
+      
+
+
+      tools.appendChild(speakBtn);
+      tools.appendChild(translateBtn);
+      body.appendChild(tools);
+
+      const simpleBtn = document.createElement('button');
+      simpleBtn.className = 'secondary';
+      simpleBtn.textContent = '🧾 Simple words';
+      simpleBtn.addEventListener('click', () => {
+        const simplified = simplifyLegalText(r.original);
+        let box = body.querySelector('.simple-box');
+        if (!box) {
+          box = document.createElement('div');
+          box.className = 'amend simple-box';
+          body.appendChild(box);
+        }
+
+        box.className = 'amend';
+        box.innerHTML = `<strong>Simple meaning:</strong><br/>${simplified}`;
+        body.appendChild(box);
+      });
+
+      tools.appendChild(simpleBtn);
+
+
+      card.appendChild(meta);
+      card.appendChild(body);
+
+      resultsDiv.appendChild(card);
+    });
+
+    // Focus first result for screen readers
+    const firstCard = resultsDiv.querySelector('.clause-card');
+    if(firstCard) firstCard.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  // small util
+  function escapeHtml(text){
+    if(!text) return '';
+    return (''+text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>');
+  }
+
+  // TTS
+  function speakText(text) {
+    if (!window.speechSynthesis) {
+      alert("Speech not supported in this browser");
+      return;
+    }
+
+    const lang = document.getElementById('langSelect')?.value || 'en';
+    const utterance = new SpeechSynthesisUtterance();
+
+    utterance.text = text.replace(/\n+/g, '. ');
+    utterance.lang = LANG_VOICE_MAP[lang] || 'en-IN';
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+
+    // Try to select matching voice
+    const voices = speechSynthesis.getVoices();
+    const matched = voices.find(v => v.lang.startsWith(utterance.lang));
+    if (matched) utterance.voice = matched;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
+  }
+
+
+})();
+
+
+
+
+
+function simplifyLegalText(text) {
+  let simplified = text.toLowerCase();
+
+  for (const term in LEGAL_SIMPLIFY_MAP) {
+    const simple = LEGAL_SIMPLIFY_MAP[term];
+    const regex = new RegExp("\\b" + term + "\\b", "gi");
+    simplified = simplified.replace(regex, simple);
+  }
+
+  // Capitalize first letter
+  return simplified.charAt(0).toUpperCase() + simplified.slice(1);
+}
+
+
+const LEGAL_SIMPLIFY_MAP = {
+  "sole discretion": "own decision",
+  "terminate": "end",
+  "without prior notice": "without telling in advance",
+  "prior written notice": "written notice before",
+  "in accordance with": "as per",
+  "governed by": "controlled by",
+  "hereinafter": "from now on",
+  "notwithstanding": "even if",
+  "pursuant to": "according to",
+  "commence": "start",
+  "revise": "change",
+  "remuneration": "salary",
+  "confidentiality": "keeping information secret",
+  "applicable law": "relevant law",
+  "at any time": "whenever"
+};
+
+const LANG_VOICE_MAP = {
+  "en": "en",
+  "hi": "hi-IN",
+  "bn": "bn-IN",
+  "ta": "ta-IN",
+  "te": "te-IN",
+  "or": "or-IN"
+};
+
+async function playServerTTS(text, lang) {
+  try {
+    const res = await fetch('/tts', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ text: text, lang: lang })
+    });
+    if (!res.ok) throw new Error('TTS failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+    audio.onended = () => URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Audio playback unavailable');
+    console.error(e);
+  }
+}
+
+
+</script>
+</body>
+</html>
