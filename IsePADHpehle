@@ -1,0 +1,57 @@
+# MiniProject
+
+## How to Run This Project
+Follow the steps below to run the project on your local machine.
+
+---### 1. Clone the Repository```
+git clone https://github.com/Das-R10/MiniProject.git
+cd MiniProject
+```
+
+---### 2. Create a Virtual Environment```
+python -m venv venv
+```
+Activate the virtual environment:
+For Windows:
+```venv\Scripts\activate
+```
+For macOS / Linux:
+```source venv/bin/activate
+```
+
+### 3. Install Dependencies
+Make sure `requirements.txt` exists, then run:
+```
+pip install -r requirements.txt
+```
+
+### 4. Run the Project
+If this is a FastAPI project:
+```
+uvicorn main:app --reload
+```
+Then open in your browser:
+```
+http://127.0.0.1:8000
+```
+
+API documentation:
+
+```
+http://127.0.0.1:8000/docs
+```
+---
+If this is a normal Python script:
+```
+python main.py
+```
+(Replace `main.py` with your actual file name if different.)
+---
+
+
+* Always use a virtual environment before installing dependencies.
+* Recommended Python version: 3.10 or higher.
+
+---
+
+If you tell me your exact main file name (like `app.py`, `server.py`, etc.), I can customize this perfectly for your project.
