@@ -9,6 +9,8 @@ from .pipeline import run_pipeline
 from fastapi.responses import FileResponse
 from .translate_api import router as translate_router
 
+from .rag import router as rag_router, vecstore  
+
 
 
 app = FastAPI(title="Legal Clause Analyzer API")
@@ -19,14 +21,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Serve frontend static files from ../frontend
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
 
 app.mount("/static", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 app.include_router(translate_router, prefix="", tags=["translate"])
-
+app.include_router(rag_router, tags=["qa"])
 
 @app.get("/")
 def serve_frontend():
@@ -36,17 +37,21 @@ def serve_frontend():
 
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
-    """
-    Accept a PDF or .txt and return processed clause analysis.
-    Response JSON contains: clauses (list), results (list with label/confidence/amendment)
-    """
     raw_text = extract_text_from_upload(file)
     clauses = split_into_clauses(raw_text)
 
-    # run the entire pipeline (this may take some seconds on CPU)
+    # 🔴 CLEAR OLD DOCUMENT + INDEX NEW ONE
+    vecstore.clear()
+    vecstore.add_clauses(clauses)
+
     results = run_pipeline(clauses)
 
-    return {"num_clauses": len(clauses), "clauses": clauses, "results": results}
+    return {
+        "num_clauses": len(clauses),
+        "clauses": clauses,
+        "results": results
+    }
+
 
 
 if __name__ == "__main__":
