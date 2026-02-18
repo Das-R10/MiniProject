@@ -8,6 +8,7 @@ Run this from backend.main. This module:
 - Predicts labels and confidences
 - Tries controlled GenAI rewriting (deterministic, with safety checks)
 """
+print(" THIS PIPELINE FILE IS RUNNING")
 
 import torch
 import torch.nn.functional as F
@@ -180,159 +181,303 @@ else:
             return x
 
 # === GenAI utilities ===
-def build_cpu_legal_prompt(clause_text):
-    return (
-        "Rewrite the following employment contract clause to be fairer to the employee.\n\n"
-        "IMPORTANT:\n"
-        "- You MUST change the wording.\n"
-        "- You MUST add employee protection.\n"
-        "- Do NOT repeat the original sentence.\n"
-        "- Output ONLY one rewritten legal clause (no lists, no explanations).\n\n"
-        f"Original clause:\n{clause_text}\n\n"
-        "Rewritten clause:"
-    )
+# ==========================================================
+# RAG KNOWLEDGE BASE
+# ==========================================================
 
+RAG_EXAMPLES = [
+    {
+        "keywords": ["terminate", "termination"],
+        "unsafe": "Employer may terminate employment immediately.",
+        "safe": "Employer may terminate employment only after prior written notice of 15 days."
+    },
+    {
+        "keywords": ["dismiss", "misconduct"],
+        "unsafe": "Employee may be dismissed immediately for misconduct.",
+        "safe": "Employee may be dismissed for misconduct only after fair investigation and written warning."
+    },
+    {
+        "keywords": ["modify", "change terms"],
+        "unsafe": "Employer may modify terms at its sole discretion.",
+        "safe": "Employer may modify terms only after consultation and written agreement with the employee."
+    },
+    {
+        "keywords": ["suspend"],
+        "unsafe": "Employee may be suspended immediately.",
+        "safe": "Employee suspension requires written notice and reasonable opportunity to respond."
+    }
+]
+
+def retrieve_best_template(clause_text):
+
+    text = clause_text.lower()
+
+    if any(k in text for k in ["terminate", "termination"]):
+        return "only after providing prior written notice of 15 days"
+
+    if any(k in text for k in ["dismiss", "misconduct"]):
+        return "only after fair investigation and written warning"
+
+    if any(k in text for k in ["modify", "sole discretion"]):
+        return "only after prior written notice and employee consultation"
+
+    if "suspend" in text:
+        return "only after written notice and opportunity to respond"
+
+    return "with prior written notice and fair review"
+
+
+def build_amendment(original):
+
+    template = retrieve_best_template(original)
+
+    original = original.rstrip(".")
+    return f"{original}, {template}."
+
+
+# ==========================================================
+# FEW-SHOT ROLE BASED LEGAL PROMPT
+# ==========================================================
+def build_rag_prompt(clause_text, role="Employee"):
+
+    return f"""
+Rewrite unfair employment clauses to be fair.
+
+Examples:
+
+Original:
+The company may terminate employment without notice.
+Rewritten:
+The company may terminate employment only after prior written notice of 15 days.
+
+Original:
+Employee may be dismissed immediately for misconduct.
+Rewritten:
+Employee may be dismissed for misconduct only after fair investigation and written warning.
+
+Original:
+Employer may modify terms at its sole discretion.
+Rewritten:
+Employer may modify terms only after prior written notice and employee consultation.
+
+Now rewrite:
+
+Original:
+{clause_text}
+
+Rewritten:
+"""
+
+
+
+
+# ==========================================================
+# GENAI GENERATION
+# ==========================================================
 def generate_cpu_amendment(prompt):
+
     tokenizer, gen_model = get_gen_model_and_tokenizer()
-    inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=512).to(DEVICE)
+
+    inputs = tokenizer(
+        prompt,
+        return_tensors="pt",
+        truncation=True,
+        max_length=512
+    ).to(DEVICE)
 
     outputs = gen_model.generate(
-        **inputs,
-        max_new_tokens=80,
-        do_sample=False,
-        num_beams=5,
-        repetition_penalty=1.6,
-        no_repeat_ngram_size=3,
-        length_penalty=1.1
+    **inputs,
+    max_new_tokens=60,
+    do_sample=True,
+    temperature=0.8,
+    top_p=0.95,
+    repetition_penalty=1.1
     )
 
-    text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    if "Rewritten clause:" in text:
-        text = text.split("Rewritten clause:")[-1]
-    return text.strip()
+    return tokenizer.decode(
+        outputs[0],
+        skip_special_tokens=True
+    ).strip()
 
+# ==========================================================
+# CLEAN GENERATED OUTPUT
+# ==========================================================
 def clean_genai_output(original, generated):
+
     if generated is None:
         return None
-    original_norm = original.lower().strip()
-    generated_norm = generated.lower().strip()
 
-    # Reject verbatim copy
-    if generated_norm == original_norm:
+    g = generated.strip()
+
+    # remove prefixes
+    if "Rewritten:" in g:
+        g = g.split("Rewritten:")[-1].strip()
+
+    # ONLY reject if absurdly short
+    if len(g.split()) < 4:
         return None
 
-    # Reject too-short rewrites
-    if len(generated.split()) < 8:
-        return None
+    return g
 
-    return generated
 
-def violates_semantic_scope(original, generated):
-    if generated is None:
-        return False
-    forbidden_keywords = {"terminate", "termination", "dismiss", "fire", "suspend", "sever"}
-    original_text = original.lower()
-    generated_text = generated.lower()
-    for word in forbidden_keywords:
-        if (word in generated_text) and (word not in original_text):
-            return True
-    return False
+def fallback_amendment(original):
 
-# === End-to-end pipeline function ===
-def run_pipeline(clauses):
+    template = retrieve_best_template(original)
+
+    return original.rstrip(".") + ", " + template + "."
+
+
+
+# ==========================================================
+# MERGE ORIGINAL + ADDITION
+# ==========================================================
+def merge_amendment(original, addition):
+
+    if addition is None:
+        addition = (
+            "provided prior written notice and fair opportunity to respond are given"
+        )
+
+    addition = addition.strip().rstrip(".")
+    original = original.rstrip(".")
+
+    return f"{original}, {addition}."
+
+
+# ==========================================================
+# END-TO-END PIPELINE
+# ==========================================================
+def run_pipeline(clauses, role="Employee"):
     """
-    Input: list of clause dicts (same shape used throughout your project)
-    Output: list of result dicts: {clause_id, label_name, confidence, amended_text}
+    Input: list of clause dicts
+    Output: results with labels + amendments
     """
+
     results = []
 
     if len(clauses) == 0:
         return results
 
-    # 1) embeddings and features
+    # ===== Embeddings =====
     model = get_sentence_model()
     texts = [c["text"] for c in clauses]
-    with torch.no_grad():
-        embeddings = model.encode(texts, convert_to_tensor=True, normalize_embeddings=True).to(DEVICE)
 
-    # positional features
-    positions = np.array([c.get("position", i+1) for i,c in enumerate(clauses)], dtype=np.float32)
+    with torch.no_grad():
+        embeddings = model.encode(
+            texts,
+            convert_to_tensor=True,
+            normalize_embeddings=True
+        ).to(DEVICE)
+
+    # ===== Positional feature =====
+    positions = np.array(
+        [c.get("position", i+1) for i, c in enumerate(clauses)],
+        dtype=np.float32
+    )
     positions = positions / positions.max()
     pos_tensor = torch.tensor(positions).unsqueeze(1).float()
 
-    # section ids
+    # ===== Section IDs =====
     sections = list({c["section"] for c in clauses})
     section_to_id = {s: i for i, s in enumerate(sections)}
-    section_ids = torch.tensor([section_to_id[c["section"]] for c in clauses], dtype=torch.float).unsqueeze(1)
 
-    # node feature matrix
-    X = torch.cat([embeddings, pos_tensor.to(DEVICE), section_ids.to(DEVICE)], dim=1).float()
+    section_ids = torch.tensor(
+        [section_to_id[c["section"]] for c in clauses],
+        dtype=torch.float
+    ).unsqueeze(1)
 
-    # 2) build graph
+    # ===== Node feature matrix =====
+    X = torch.cat(
+        [embeddings, pos_tensor.to(DEVICE), section_ids.to(DEVICE)],
+        dim=1
+    ).float()
+
+    # ===== Graph =====
     edge_index, edge_labels = build_graph(clauses, embeddings)
 
-    # 3) weak labels + confidences
+    # ===== Weak labels =====
     labels = []
     label_conf = []
+
     for c in clauses:
         lbl, conf = weak_label_clause_v2(c)
         labels.append(lbl)
         label_conf.append(conf)
+
     labels = torch.tensor(labels, dtype=torch.long)
     label_conf = torch.tensor(label_conf, dtype=torch.float).to(DEVICE)
 
-    # 4) class weighting safely
-    counts = Counter(labels.tolist())
-    total = sum(counts.values())
-    class_weights = torch.tensor([ (total / counts[i]) if counts.get(i,0) > 0 else 0.0 for i in range(3)], dtype=torch.float)
-    criterion = torch.nn.CrossEntropyLoss(weight=class_weights.to(DEVICE))
-
-    # 5) build model (GAT if available)
+    # ===== Model =====
     in_ch = X.shape[1]
     num_classes = 3
+
     if HAS_TG:
-        # use GPU if available else CPU
-        model_net = GATNodeClassifier(in_channels=in_ch, hidden_channels=64, num_classes=num_classes).to(DEVICE)
+        model_net = GATNodeClassifier(
+            in_channels=in_ch,
+            hidden_channels=64,
+            num_classes=num_classes
+        ).to(DEVICE)
     else:
-        model_net = MLPNodeClassifier(in_channels=in_ch, hidden_channels=128, num_classes=num_classes).to(DEVICE)
+        model_net = MLPNodeClassifier(
+            in_channels=in_ch,
+            hidden_channels=128,
+            num_classes=num_classes
+        ).to(DEVICE)
 
-    optimizer = torch.optim.Adam(model_net.parameters(), lr=0.004, weight_decay=1e-4)
+    optimizer = torch.optim.Adam(
+        model_net.parameters(),
+        lr=0.004,
+        weight_decay=1e-4
+    )
 
-    # 6) weakly supervised training (small number of epochs)
+    # ===== Training =====
     model_net.train()
-    epochs = 60
-    for epoch in range(1, epochs+1):
+    epochs = 30
+
+    for epoch in range(1, epochs + 1):
+
         optimizer.zero_grad()
+
         if HAS_TG:
             logits = model_net(X, edge_index)
         else:
             logits = model_net(X, None)
-        per_node_loss = F.cross_entropy(logits, labels, reduction="none")
-        weighted = per_node_loss * label_conf.to(per_node_loss.device)
-        loss = weighted.mean()
+
+        per_node_loss = F.cross_entropy(
+            logits,
+            labels,
+            reduction="none"
+        )
+
+        loss = (per_node_loss * label_conf).mean()
+
         loss.backward()
         optimizer.step()
-        if epoch % 20 == 0 or epoch == 1:
+
+        if epoch % 10 == 0 or epoch == 1:
             print(f"Train epoch {epoch:03d} loss={loss.item():.4f}")
 
-    # 7) inference
+    # ===== Inference =====
     model_net.eval()
+
     with torch.no_grad():
         if HAS_TG:
             logits = model_net(X, edge_index)
         else:
             logits = model_net(X, None)
+
         probs = F.softmax(logits, dim=1).cpu().numpy()
         preds = np.argmax(probs, axis=1)
 
-    # 8) generate amendments for risky clauses with safety checks
-    tokenizer, gen_model = None, None
-    results = []
+    # ===== Results =====
     clauses_for_genai = []
+
     for i, c in enumerate(clauses):
+
         pred = int(preds[i])
         conf = float(probs[i, pred])
         label_name = INV_LABEL_MAP[pred]
+
         results.append({
             "clause_id": c["clause_id"],
             "section": c["section"],
@@ -341,30 +486,24 @@ def run_pipeline(clauses):
             "original": c["text"],
             "amended": None
         })
-        # decide amendment candidates: Con and high confidence
-        if label_name == "Con" and conf >= 0.7 and c["section"].lower() not in {"definitions","governing law","commencement","interpretation"}:
-            clauses_for_genai.append((i, c, label_name, conf))
 
-    # only load gen model if we need to generate
+        if label_name == "Con":
+            clauses_for_genai.append((i, c))
+
+    # ===== Load GenAI only if needed =====
     if clauses_for_genai:
-        _ = get_gen_model_and_tokenizer()  # will load models (takes time)
+        _ = get_gen_model_and_tokenizer()
 
-    for (i, c, label_name, conf) in clauses_for_genai:
-        prompt = build_cpu_legal_prompt(c["text"])
-        amended = None
-        try:
-            amended_raw = generate_cpu_amendment(prompt)
-            amended_clean = clean_genai_output(c["text"], amended_raw)
-            if amended_clean is not None and violates_semantic_scope(c["text"], amended_clean):
-                amended_clean = None
-            amended = amended_clean
-        except Exception as e:
-            amended = None
+   # ===== Amendment Generation =====
+    for (i, c) in clauses_for_genai:
 
-        if amended is None:
-            amended = "[No safe automatic amendment generated]"
+      amended = build_amendment(c["text"])
 
-        results[i]["amended"] = amended
+      results[i]["amended"] = amended
 
-    # return results list
+
+
+
+
     return results
+
