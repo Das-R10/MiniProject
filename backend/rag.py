@@ -5,7 +5,7 @@ import pickle
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
-from .pipeline import get_gen_model_and_tokenizer, violates_semantic_scope
+from .pipeline import get_gen_model_and_tokenizer
 
 # =========================
 # Vector store (document RAG)
@@ -118,13 +118,6 @@ def document_qa(req: QARequest):
     )
 
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
-
-    if violates_semantic_scope(" ".join(r["text"] for r in retrieved), answer):
-        return {
-            "answer": None,
-            "explanation": "Answer may go beyond document scope.",
-            "evidence": retrieved
-        }
 
     return {
         "answer": answer,

@@ -1,348 +1,1188 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Legal Clause Analyzer — Chat Assistant</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>LexAnalyze — Legal Clause Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{
-      --bg:#0a0a0a;             /* near black */
-      --card:#121212;           /* dark card */
-      --muted:#9ca3af;          /* muted gray */
-      --accent:#f59e0b;         /* orange */
-      --accent-2:#fb923c;       /* light orange */
-      --ok:#22c55e;
-      --danger:#ef4444;
-      --glass: rgba(255,255,255,0.04);
-      --radius:14px;
-      --maxw:1100px;
+    :root {
+      --bg: #060910;
+      --surface: #0d1117;
+      --surface2: #131920;
+      --border: rgba(255,255,255,0.06);
+      --border-glow: rgba(99,179,237,0.2);
+      --accent: #63b3ed;
+      --accent2: #4fd1c5;
+      --gold: #f6c90e;
+      --con: #fc5c65;
+      --pro: #26de81;
+      --neutral: #778ca3;
+      --text: #e2eaf4;
+      --muted: #5a7184;
+      --radius: 12px;
     }
 
-    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#071023);color:#e6eefc}
-    .app{max-width:var(--maxw);margin:18px auto;padding:16px;display:grid;grid-template-columns:1fr 360px;gap:18px}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    header{display:flex;align-items:center;gap:12px}
-    .logo {
-      width: 70px;
-      height: 70px;
-      min-width: 70px;
-      border-radius: 14px;
-      overflow: hidden;              /* 🔥 prevents overflow */
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glow orb */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99,179,237,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .layout {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      grid-template-rows: auto 1fr;
+      gap: 20px;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      grid-column: 1 / -1;
       display: flex;
       align-items: center;
-      justify-content: center;
-      background: transparent;       /* remove gradient if using full image */
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      animation: fadeDown 0.5s ease;
     }
 
-    .logo img {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-glow);
+      flex-shrink: 0;
+    }
+
+    .logo-box img {
       width: 100%;
       height: 100%;
-      object-fit: cover;             /* 🔥 keeps perfect square */
-      border-radius: 14px;
+      object-fit: cover;
     }
 
-    h1{margin:0;font-size:20px}
-    .lead{color:var(--muted);margin-top:4px;font-size:13px}
+    .brand-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
 
-    /* main card */
-    .panel{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:0 6px 20px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .brand-text p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+      font-weight: 300;
+    }
 
-    /* upload area */
-    .uploader{display:flex;gap:12px;align-items:center;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border:1px dashed rgba(255,255,255,0.04)}
-    .drop{flex:1;padding:18px;min-height:110px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;cursor:pointer}
-    .drop p{margin:0;color:#dbeafe;font-weight:600}
-    .hint{color:var(--muted);font-size:13px;margin-top:6px}
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-    .right-actions{width:260px;display:flex;flex-direction:column;gap:10px}
-    input[type=file]{display:none}
-    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),#e06b0b);border:none;color:#04263a}
+    .lang-select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
 
-    /* results */
-    .results{margin-top:12px;display:flex;flex-direction:column;gap:12px}
-    .summary{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--pro);
+      box-shadow: 0 0 8px var(--pro);
+      animation: pulse 2s infinite;
+    }
 
-    .clause-card{display:flex;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.02)}
-    .clause-meta{width:110px;text-align:center}
-    .clause-id{font-weight:800;font-size:18px}
-    .clause-section{color:var(--muted);font-size:12px;margin-top:6px}
-    .clause-body{flex:1}
-    .label{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700;color:#051323}
-    .label.neutral{background:#94a3b8}
-    .label.pro{background:var(--ok)}
-    .label.con{background:var(--danger)}
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
 
-    .amend{margin-top:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.02);color:var(--muted)}
+    /* ===== MAIN PANEL ===== */
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeUp 0.5s ease 0.1s both;
+    }
 
-    /* tools */
-    .tools{display:flex;gap:8px;margin-top:10px}
-    .small-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+    /* ===== UPLOAD ZONE ===== */
+    .upload-zone {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
 
-    /* right chat */
-    .chat-wrap{position:sticky;top:18px;height:calc(100vh - 36px);display:flex;flex-direction:column}
-    .chat-panel{flex:1;display:flex;flex-direction:column;border-radius:12px;overflow:hidden}
-    .chat-header{padding:12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.015));display:flex;align-items:center;justify-content:space-between}
-    .chat-body{flex:1;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))}
-    .msg{max-width:80%;padding:10px;border-radius:12px}
-    .msg.user{align-self:flex-end;background:linear-gradient(90deg,#e0af0d,#e0af0d);color:#022233}
+    .upload-inner {
+      display: flex;
+      gap: 0;
+    }
+
+    .drop-area {
+      flex: 1;
+      padding: 32px 28px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+
+    .drop-area:hover {
+      background: rgba(99,179,237,0.03);
+    }
+
+    .drop-area.dragover {
+      background: rgba(99,179,237,0.06);
+      border-color: var(--accent);
+    }
+
+    .drop-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .drop-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .drop-hint {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .file-name-badge {
+      display: none;
+      margin-top: 10px;
+      padding: 6px 10px;
+      background: rgba(99,179,237,0.1);
+      border: 1px solid rgba(99,179,237,0.2);
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .upload-actions {
+      width: 220px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    input[type=file] { display: none; }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #060910;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(99,179,237,0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ===== PROGRESS ===== */
+    .progress-bar {
+      display: none;
+      height: 3px;
+      background: var(--surface2);
+      overflow: hidden;
+    }
+
+    .progress-bar.active {
+      display: block;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      animation: progressSlide 1.5s ease-in-out infinite;
+    }
+
+    @keyframes progressSlide {
+      0% { transform: translateX(-200%); }
+      100% { transform: translateX(500%); }
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      display: none;
+      padding: 14px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .stats-bar.visible { display: flex; }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--border);
+    }
+
+    .stat-con { color: var(--con); }
+    .stat-pro { color: var(--pro); }
+    .stat-neutral { color: var(--neutral); }
+
+    .stats-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 7px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-outline-con {
+      background: transparent;
+      border: 1px solid rgba(252,92,101,0.3);
+      color: var(--con);
+    }
+
+    .btn-outline-con:hover { background: rgba(252,92,101,0.08); }
+
+    .btn-outline-pro {
+      background: transparent;
+      border: 1px solid rgba(38,222,129,0.3);
+      color: var(--pro);
+    }
+
+    .btn-outline-pro:hover { background: rgba(38,222,129,0.08); }
+
+    /* ===== CLAUSE CARDS ===== */
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .clause-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .clause-card:hover {
+      border-color: rgba(99,179,237,0.2);
+      transform: translateY(-1px);
+    }
+
+    .clause-card.con { border-left: 3px solid var(--con); }
+    .clause-card.pro { border-left: 3px solid var(--pro); }
+    .clause-card.neutral { border-left: 3px solid var(--neutral); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .card-header:hover { background: rgba(255,255,255,0.01); }
+
+    .clause-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      min-width: 36px;
+    }
+
+    .clause-section-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-weight: 500;
+      white-space: nowrap;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .label-badge {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .label-badge.con { background: rgba(252,92,101,0.15); color: var(--con); border: 1px solid rgba(252,92,101,0.3); }
+    .label-badge.pro { background: rgba(38,222,129,0.15); color: var(--pro); border: 1px solid rgba(38,222,129,0.3); }
+    .label-badge.neutral { background: rgba(119,140,163,0.15); color: var(--neutral); border: 1px solid rgba(119,140,163,0.3); }
+
+    .conf-bar-wrap {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .conf-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 34px;
+      text-align: right;
+    }
+
+    .conf-bar {
+      width: 60px;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .conf-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    .conf-fill.con { background: var(--con); }
+    .conf-fill.pro { background: var(--pro); }
+    .conf-fill.neutral { background: var(--neutral); }
+
+    .chevron {
+      color: var(--muted);
+      font-size: 16px;
+      transition: transform 0.2s;
+      margin-left: 4px;
+    }
+
+    .chevron.open { transform: rotate(180deg); }
+
+    .card-body {
+      display: none;
+      padding: 0 16px 16px 16px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.2s ease;
+    }
+
+    .card-body.open { display: block; }
+
+    .clause-text-block {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--surface2);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a8c5da;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .amendment-block {
+      margin-top: 10px;
+      padding: 12px;
+      background: rgba(38,222,129,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(38,222,129,0.15);
+    }
+
+    .amendment-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--pro);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .amendment-text {
+      font-size: 13px;
+      color: #c8f5e1;
+      line-height: 1.6;
+    }
+
+    .translated-block {
+      margin-top: 10px;
+      padding: 12px;
+      background: rgba(99,179,237,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(99,179,237,0.15);
+    }
+
+    .translated-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .action-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(99,179,237,0.05); }
+
+    /* ===== CHAT PANEL ===== */
+    .chat-panel {
+      position: sticky;
+      top: 20px;
+      height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: fadeUp 0.5s ease 0.2s both;
+    }
+
+    .chat-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .chat-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .chat-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-weight: 300;
+    }
+
+    .chat-head-actions { display: flex; gap: 6px; }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .msg {
+      max-width: 85%;
+      padding: 10px 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.55;
+      animation: fadeUp 0.2s ease;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #060910;
+      font-weight: 500;
+      border-radius: 10px 10px 2px 10px;
+    }
+
     .msg.bot {
       align-self: flex-start;
-      background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.06),
-        rgba(255, 255, 255, 0.02)
-      );
-      border: 1px solid rgba(245, 158, 11, 0.25); /* orange accent */
-      color: #e5e7eb;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px 10px 10px 2px;
     }
 
-    .chat-input{display:flex;gap:8px;padding:10px;background:var(--card);border-top:1px solid rgba(255,255,255,0.02)}
-    .chat-input input{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
-    .quick-actions{display:flex;gap:8px;margin-top:10px}
-    .pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.02);cursor:pointer;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+    .msg.thinking {
+      align-self: flex-start;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-style: italic;
+    }
 
-    /* responsive */
-    @media (max-width:980px){.app{grid-template-columns:1fr;}.chat-wrap{position:relative;height:auto}} 
+    .msg.evidence {
+      align-self: flex-start;
+      background: rgba(99,179,237,0.04);
+      border: 1px solid rgba(99,179,237,0.12);
+      color: var(--muted);
+      font-size: 12px;
+      border-radius: 8px;
+      max-width: 95%;
+    }
+
+    .evidence-ref {
+      font-family: 'DM Mono', monospace;
+      color: var(--accent);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .quick-pills {
+      padding: 10px 16px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+      flex-shrink: 0;
+    }
+
+    .pill {
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(99,179,237,0.05); }
+
+    .chat-input-row {
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .chat-input-field {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input-field:focus { border-color: var(--accent); }
+    .chat-input-field::placeholder { color: var(--muted); }
+
+    .send-btn {
+      padding: 10px 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 8px;
+      color: #060910;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-title { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--text); margin-bottom: 6px; }
+    .empty-sub { font-size: 12px; font-weight: 300; }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      .chat-panel { position: relative; top: 0; height: 500px; }
+    }
+
+    @media (max-width: 600px) {
+      .layout { padding: 12px; gap: 12px; }
+      .upload-inner { flex-direction: column; }
+      .upload-actions { width: 100%; padding: 16px; flex-direction: row; flex-wrap: wrap; }
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <!-- MAIN -->
-    <main>
-      <header>
-        <div class="logo">
-          <img src="/static/logo.png" alt="Legal Clause Analyzer Logo" />
+<div class="layout">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo-box">
+        <img src="/static/logo.png" alt="LexAnalyze"/>
+      </div>
+      <div class="brand-text">
+        <h1>LexAnalyze</h1>
+        <p>Legal Clause Intelligence Platform</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <select id="langSelect" class="lang-select">
+        <option value="">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="bn">বাংলা</option>
+        <option value="ta">தமிழ்</option>
+        <option value="te">తెలుగు</option>
+      </select>
+      <div class="status-dot" title="Server online"></div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-panel">
+
+    <!-- UPLOAD -->
+    <div class="upload-zone">
+      <div class="upload-inner">
+        <div class="drop-area" id="dropzone">
+          <span class="drop-icon">⚖️</span>
+          <div class="drop-title">Drop your contract here</div>
+          <div class="drop-hint">PDF or TXT · Processing takes 10–30s on CPU</div>
+          <div class="file-name-badge" id="fileNameBadge"></div>
         </div>
-        <div>
-          <h1>Legal Clause Analyzer</h1>
-          <div class="lead">Upload a contract — the assistant will find risky clauses and explain what's right or wrong.</div>
-        </div>
-      </header>
-
-      <section class="panel" style="margin-top:12px;">
-        <div class="uploader" role="region" aria-label="upload area">
-          <div class="drop" id="dropzone">
-            <p id="dropText">📁 Choose or drop a file (PDF / TXT)</p>
-            <div class="hint">Large text is OK — processing may take 10–30s on CPU.</div>
-          </div>
-
-          <div class="right-actions">
-            <input id="fileInput" type="file" accept=".pdf,.txt" />
-            <button id="chooseBtn" class="btn">Choose file</button>
-            <button id="uploadBtn" class="btn primary">Upload & Process</button>
-            <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-              <label style="color:var(--muted);font-size:13px">Language:</label>
-              <select id="langSelect" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:inherit;padding:6px;border-radius:8px">
-                <option value="">English</option>
-                <option value="hi">हिन्दी (Hindi)</option>
-                <option value="bn">বাংলা (Bengali)</option>
-                <option value="ta">தமிழ் (Tamil)</option>
-                <option value="te">తెలుగు (Telugu)</option>
-              </select>
-            </div>
-            <div id="statusBox" style="display:none;color:var(--muted);margin-top:6px">Processing…</div>
-          </div>
-        </div>
-
-        <div id="results" class="results" style="display:none;margin-top:12px"></div>
-      </section>
-
-      <!-- helper controls -->
-      <section style="margin-top:12px;display:flex;gap:8px;align-items:center">
-        <button id="summarizeWrong" class="btn">What's wrong?</button>
-        <button id="summarizeRight" class="btn">What's right?</button>
-        <div style="flex:1"></div>
-        <button id="downloadJson" class="btn">Download JSON</button>
-      </section>
-
-    </main>
-
-    <!-- CHAT / ASSISTANT -->
-    <aside class="chat-wrap">
-      <div class="chat-panel panel">
-        <div class="chat-header">
-          <div><strong>Assistant</strong><div style="font-size:12px;color:var(--muted)">Ask questions about the uploaded document</div></div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button id="clearChat" class="small-btn">Clear</button>
-            <button id="speakAnswer" class="small-btn">🔊</button>
-          </div>
-        </div>
-        <div id="chatBody" class="chat-body" aria-live="polite"></div>
-        <div class="chat-input">
-          <input id="chatInput" placeholder="Ask the assistant (e.g. "What happens if seller defaults?")" />
-          <button id="chatSend" class="btn primary">Ask</button>
-        </div>
-        <div class="quick-actions" style="padding:12px">
-          <div class="pill" id="quick1">Summarize risks</div>
-          <div class="pill" id="quick2">List pro clauses</div>
-          <div class="pill" id="quick3">Show refund clauses</div>
+        <div class="upload-actions">
+          <input type="file" id="fileInput" accept=".pdf,.txt"/>
+          <button class="btn btn-ghost" id="chooseBtn">📂 Choose File</button>
+          <button class="btn btn-primary" id="uploadBtn">Analyze Contract →</button>
         </div>
       </div>
-    </aside>
-  </div>
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-item">
+        <span class="stat-value" id="statTotal" style="color:var(--accent)">0</span>
+        <span class="stat-label">Total Clauses</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value stat-con" id="statCon">0</span>
+        <span class="stat-label">Risky</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value stat-pro" id="statPro">0</span>
+        <span class="stat-label">Favorable</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value stat-neutral" id="statNeutral">0</span>
+        <span class="stat-label">Neutral</span>
+      </div>
+      <div class="stats-actions">
+        <button class="btn-sm btn-outline-con" id="filterCon">⚠ Risks only</button>
+        <button class="btn-sm btn-outline-pro" id="filterPro">✓ Favorable only</button>
+        <button class="btn-sm btn-outline" id="filterAll">All</button>
+        <button class="btn-sm btn-outline" id="downloadJson">↓ JSON</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-list" id="resultsList">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">📄</div>
+        <div class="empty-title">No document loaded</div>
+        <div class="empty-sub">Upload a contract PDF or TXT to begin analysis</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- CHAT -->
+  <aside class="chat-panel">
+    <div class="chat-head">
+      <div>
+        <div class="chat-title">Legal Assistant</div>
+        <div class="chat-subtitle">Ask questions about your document</div>
+      </div>
+      <div class="chat-head-actions">
+        <button class="icon-btn" id="speakAnswer" title="Read last answer">🔊</button>
+        <button class="icon-btn" id="clearChat" title="Clear chat">✕</button>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="quick-pills">
+      <button class="pill" id="quick1">⚠ Summarize risks</button>
+      <button class="pill" id="quick2">✓ Pro clauses</button>
+      <button class="pill" id="quick3">📋 Termination terms</button>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input-field" id="chatInput" placeholder="Ask about any clause…"/>
+      <button class="send-btn" id="chatSend">Send</button>
+    </div>
+  </aside>
+
+</div>
 
 <script>
-/* Minimal client app — dark professional UI + chat + helpers */
 (function(){
-  const drop = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const chooseBtn = document.getElementById('chooseBtn');
-  const uploadBtn = document.getElementById('uploadBtn');
-  const statusBox = document.getElementById('statusBox');
-  const resultsDiv = document.getElementById('results');
-  const downloadJson = document.getElementById('downloadJson');
-
-  const chatBody = document.getElementById('chatBody');
-  const chatInput = document.getElementById('chatInput');
-  const chatSend = document.getElementById('chatSend');
-  const clearChat = document.getElementById('clearChat');
+  // DOM refs
+  const dropzone    = document.getElementById('dropzone');
+  const fileInput   = document.getElementById('fileInput');
+  const chooseBtn   = document.getElementById('chooseBtn');
+  const uploadBtn   = document.getElementById('uploadBtn');
+  const progressBar = document.getElementById('progressBar');
+  const statsBar    = document.getElementById('statsBar');
+  const resultsList = document.getElementById('resultsList');
+  const emptyState  = document.getElementById('emptyState');
+  const fileNameBadge = document.getElementById('fileNameBadge');
+  const chatMessages  = document.getElementById('chatMessages');
+  const chatInput     = document.getElementById('chatInput');
+  const chatSend      = document.getElementById('chatSend');
+  const clearChat     = document.getElementById('clearChat');
   const speakAnswerBtn = document.getElementById('speakAnswer');
 
-  let lastData = null; // store latest upload result
+  let lastData = null;
+  let lastAnswer = '';
+  let currentFilter = 'all';
 
-  // UX handlers
-  drop.addEventListener('click', ()=> fileInput.click());
-  chooseBtn.addEventListener('click', ()=> fileInput.click());
-  fileInput.addEventListener('change', ()=> {
+  // ===== UPLOAD HANDLERS =====
+  chooseBtn.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', () => {
     const f = fileInput.files[0];
-    if(f) drop.querySelector('#dropText').textContent = '📁 ' + f.name;
+    if (f) {
+      fileNameBadge.textContent = f.name;
+      fileNameBadge.style.display = 'inline-block';
+    }
   });
 
-  uploadBtn.addEventListener('click', ()=> {
-    if(!fileInput.files.length){alert('Choose a file first');return}
-    uploadFile(fileInput.files[0]);
+  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault(); dropzone.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f) {
+      fileNameBadge.textContent = f.name;
+      fileNameBadge.style.display = 'inline-block';
+      // set to input for upload
+      const dt = new DataTransfer(); dt.items.add(f);
+      fileInput.files = dt.files;
+    }
   });
 
-  async function uploadFile(file){
-    resultsDiv.style.display='none';
-    statusBox.style.display='block';
-    statusBox.textContent='Uploading & analysing — please wait';
+  uploadBtn.addEventListener('click', () => {
+    if (!fileInput.files.length) { alert('Please choose a file first.'); return; }
+    doUpload(fileInput.files[0]);
+  });
+
+  async function doUpload(file) {
+    uploadBtn.disabled = true;
+    progressBar.classList.add('active');
+    resultsList.innerHTML = '';
+    statsBar.classList.remove('visible');
 
     const fd = new FormData(); fd.append('file', file);
-    try{
-      const res = await fetch('/upload',{method:'POST',body:fd});
-      if(!res.ok){alert('Upload failed');statusBox.style.display='none';return}
+    try {
+      const res = await fetch('/upload', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
       lastData = data;
-      renderResults(data);
-    }catch(e){console.error(e);alert('Upload error')}
-    finally{statusBox.style.display='none'}
+      renderStats(data);
+      renderResults(data.results, 'all');
+      appendMsg('Document analyzed! Ask me anything about the clauses.', 'bot');
+    } catch(e) {
+      console.error(e);
+      alert('Upload failed — check server logs.');
+    } finally {
+      uploadBtn.disabled = false;
+      progressBar.classList.remove('active');
+    }
   }
 
-  // render results and attach translate / speak / chat actions
-  function renderResults(data){
-    resultsDiv.innerHTML=''; resultsDiv.style.display='block';
-    // summary
-    const sum = document.createElement('div'); sum.className='summary';
-    sum.innerHTML = `<div>✅ Clauses found: <strong>${data.num_clauses}</strong></div><div style="display:flex;gap:8px"><button id='downloadBtn' class='btn'>Download JSON</button></div>`;
-    resultsDiv.appendChild(sum);
-    document.getElementById('downloadBtn').addEventListener('click', ()=>downloadJSON(data));
+  // ===== STATS =====
+  function renderStats(data) {
+    const con = data.results.filter(r => r.label === 'Con').length;
+    const pro = data.results.filter(r => r.label === 'Pro').length;
+    const neu = data.results.filter(r => r.label === 'Neutral').length;
+    document.getElementById('statTotal').textContent = data.num_clauses;
+    document.getElementById('statCon').textContent = con;
+    document.getElementById('statPro').textContent = pro;
+    document.getElementById('statNeutral').textContent = neu;
+    statsBar.classList.add('visible');
+  }
 
-    data.results.forEach(r=>{
-      const clause = (data.clauses||[]).find(c=>c.clause_id===r.clause_id) || {};
-      const card = document.createElement('div'); card.className='clause-card panel';
+  // ===== FILTER BUTTONS =====
+  document.getElementById('filterCon').addEventListener('click', () => { currentFilter='con'; renderResults(lastData.results,'con'); });
+  document.getElementById('filterPro').addEventListener('click', () => { currentFilter='pro'; renderResults(lastData.results,'pro'); });
+  document.getElementById('filterAll').addEventListener('click', () => { currentFilter='all'; renderResults(lastData.results,'all'); });
+  document.getElementById('downloadJson').addEventListener('click', () => { if(lastData) downloadJSON(lastData); });
 
-      const meta = document.createElement('div'); meta.className='clause-meta';
-      meta.innerHTML = `<div class='clause-id'>${r.clause_id}</div><div class='clause-section'>${clause.section||'Unknown'}</div><div style='margin-top:8px'><span class='label ${r.label.toLowerCase()}'>${r.label}</span></div><div style='margin-top:8px;color:var(--muted);font-size:12px'>${Math.round(r.confidence*100)}%</div>`;
+  // ===== RENDER RESULTS =====
+  function renderResults(results, filter) {
+    resultsList.innerHTML = '';
+    const filtered = filter === 'all' ? results : results.filter(r => r.label.toLowerCase() === filter);
 
-      const body = document.createElement('div'); body.className='clause-body';
-      body.innerHTML = `<div><strong>Original:</strong> <div style='margin-top:6px;color:#cfe8ff'>${escapeHtml(r.original||'')}</div></div>`;
+    if (!filtered.length) {
+      resultsList.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">No ${filter} clauses found</div></div>`;
+      return;
+    }
 
-      if(r.amended && r.amended !== '[No safe automatic amendment generated]'){
-        const am = document.createElement('div'); am.className='amend'; am.innerHTML=`<strong>Suggested amendment:</strong><div style='margin-top:6px'>${escapeHtml(r.amended)}</div>`; body.appendChild(am);
-      } else if(r.amended === '[No safe automatic amendment generated]'){
-        const am = document.createElement('div'); am.className='amend'; am.innerHTML=`<strong>Suggestion:</strong><div style='margin-top:6px;color:var(--muted)'>No safe auto amendment — recommended: expert review.</div>`; body.appendChild(am);
-      }
+    filtered.forEach((r, idx) => {
+      const card = document.createElement('div');
+      card.className = `clause-card ${r.label.toLowerCase()}`;
+      card.style.animationDelay = `${idx * 30}ms`;
 
-      const tools = document.createElement('div'); tools.className='tools';
+      const conf = Math.round(r.confidence * 100);
 
-      const translateBtn = document.createElement('button'); translateBtn.className='small-btn'; translateBtn.textContent='🌐 Translate';
-      translateBtn.addEventListener('click', async ()=>{
-        const lang = document.getElementById('langSelect').value; if(!lang){alert('Choose a target language first');return}
-        translateBtn.disabled=true; translateBtn.textContent='Translating...';
-        try{const t = await backendTranslate(r.original, lang); showTranslated(body,t)}catch(e){alert('Translation failed')}
-        finally{translateBtn.disabled=false; translateBtn.textContent='🌐 Translate'}
+      card.innerHTML = `
+        <div class="card-header" data-id="${r.clause_id}">
+          <span class="clause-num">#${r.clause_id}</span>
+          <span class="clause-section-tag">${r.section || 'Unknown'}</span>
+          <span class="label-badge ${r.label.toLowerCase()}">${r.label}</span>
+          <div class="conf-bar-wrap">
+            <span class="conf-pct">${conf}%</span>
+            <div class="conf-bar">
+              <div class="conf-fill ${r.label.toLowerCase()}" style="width:${conf}%"></div>
+            </div>
+          </div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="card-body" id="body-${r.clause_id}">
+          <div class="clause-text-block">${escHtml(r.original || '')}</div>
+          ${r.amended ? `<div class="amendment-block"><div class="amendment-label">✦ Suggested Amendment</div><div class="amendment-text">${escHtml(r.amended)}</div></div>` : ''}
+          <div id="translated-${r.clause_id}"></div>
+          <div class="card-actions">
+            <button class="action-btn translate-btn">🌐 Translate</button>
+            <button class="action-btn speak-btn">🔊 Read Aloud</button>
+            <button class="action-btn ask-btn">💬 Ask About</button>
+          </div>
+        </div>
+      `;
+
+      // toggle collapse
+      card.querySelector('.card-header').addEventListener('click', () => {
+        const body = card.querySelector('.card-body');
+        const chev = card.querySelector('.chevron');
+        body.classList.toggle('open');
+        chev.classList.toggle('open');
       });
 
-      const talkBtn = document.createElement('button'); talkBtn.className='small-btn'; talkBtn.textContent='🔊 Read';
-      talkBtn.addEventListener('click', ()=>speakText(r.original));
+      // Translate button
+      card.querySelector('.translate-btn').addEventListener('click', async function() {
+        const lang = document.getElementById('langSelect').value;
+        if (!lang) { alert('Select a target language in the header first.'); return; }
+        this.textContent = '⏳ Translating…'; this.disabled = true;
+        try {
+          const res = await fetch('/translate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text: r.original, target: lang}) });
+          const d = await res.json();
+          document.getElementById('translated-' + r.clause_id).innerHTML =
+            '<div class="translated-block"><div class="translated-label">🌐 Translation</div><div style="font-size:13px;line-height:1.6;color:#a8d8ea">' + escHtml(d.translatedText) + '</div></div>';
+        } catch(e) { alert('Translation failed'); }
+        finally { this.textContent = '🌐 Translate'; this.disabled = false; }
+      });
 
-      const askBtn = document.createElement('button'); askBtn.className='small-btn'; askBtn.textContent='💬 Ask about';
-      askBtn.addEventListener('click', ()=>{pushUserMessage(`Explain clause ${r.clause_id}: ${truncate(r.original,220)}`); sendChatQuestion(`Explain clause ${r.clause_id}:`)});
+      // Speak button
+      card.querySelector('.speak-btn').addEventListener('click', () => speakText(r.original));
 
-      tools.appendChild(translateBtn); tools.appendChild(talkBtn); tools.appendChild(askBtn);
-      body.appendChild(tools);
+      // Ask About button
+      card.querySelector('.ask-btn').addEventListener('click', () => {
+        const q = 'Explain clause ' + r.clause_id + ' and its implications for the employee.';
+        appendMsg(escHtml(q), 'user');
+        sendQuestion(q);
+        chatMessages.scrollIntoView({ behavior: 'smooth' });
+      });
 
-      card.appendChild(meta); card.appendChild(body);
-      resultsDiv.appendChild(card);
+      resultsList.appendChild(card);
     });
-
-    // focus
-    resultsDiv.scrollIntoView({behavior:'smooth'});
   }
 
-  function downloadJSON(data){
-    const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url; a.download='analysis.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  // Clause actions are handled via event listeners inside renderResults
+
+  // ===== DOWNLOAD =====
+  function downloadJSON(data) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'lexanalyze-results.json';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   }
 
-  function showTranslated(body, text){ let box = body.querySelector('.translated-box'); if(!box){box=document.createElement('div');box.className='amend translated-box';body.appendChild(box);} box.innerHTML=`<strong>Translated:</strong><div style='margin-top:6px;color:#cfe8ff'>${escapeHtml(text)}</div>` }
+  // ===== CHAT =====
+  function appendMsg(html, who) {
+    const d = document.createElement('div');
+    d.className = `msg ${who}`;
+    d.innerHTML = html;
+    chatMessages.appendChild(d);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return d;
+  }
 
-  // small helpers
-  function escapeHtml(text){ if(!text) return ''; return (''+text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>'); }
-  function truncate(s,n){return s && s.length>n? s.slice(0,n)+'…': s }
-
-  // chat logic
-  function appendMessage(txt, who='bot'){ const d=document.createElement('div'); d.className='msg '+(who==='user'?'user':'bot'); d.innerHTML = txt; chatBody.appendChild(d); chatBody.scrollTop = chatBody.scrollHeight; }
-  function pushUserMessage(txt){ appendMessage(escapeHtml(txt),'user'); }
-
-  async function sendChatQuestion(q){
-    if(!q) return; appendMessage('<em>Searching…</em>','bot');
-    try{
-      const res = await fetch('/qa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+  async function sendQuestion(q) {
+    if (!q) return;
+    const thinking = appendMsg('<em>Thinking…</em>', 'thinking');
+    try {
+      const res = await fetch('/qa', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question: q}) });
       const data = await res.json();
-      // remove last 'Searching' placeholder
-      if(chatBody.lastChild && chatBody.lastChild.innerText.includes('Searching')) chatBody.removeChild(chatBody.lastChild);
-
-      if(!data.answer){ appendMessage('<strong>No answer found in the document.</strong>'); return }
-      // show answer and evidence
-      appendMessage(`<strong>${escapeHtml(data.answer)}</strong>`);
-      (data.evidence||[]).forEach(ev=>{
-        appendMessage(`<div style='font-size:13px;color:var(--muted)'>Ref ${ev.clause_id} — score ${Math.round(ev.score*100)}%</div><div style='margin-top:6px;color:#cfe8ff'>${escapeHtml(truncate(ev.text,300))}</div>`);
+      chatMessages.removeChild(thinking);
+      if (!data.answer) { appendMsg('No relevant information found in the document.', 'bot'); return; }
+      lastAnswer = data.answer;
+      appendMsg(`<strong>${escHtml(data.answer)}</strong>`, 'bot');
+      (data.evidence || []).forEach(ev => {
+        const e = document.createElement('div');
+        e.className = 'msg evidence';
+        e.innerHTML = `<div class="evidence-ref">Ref §${ev.clause_id} · ${Math.round(ev.score*100)}% match</div><div>${escHtml(truncate(ev.text, 200))}</div>`;
+        chatMessages.appendChild(e);
       });
-    }catch(e){ console.error(e); appendMessage('Unable to fetch answer — check server logs') }
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    } catch(e) { chatMessages.removeChild(thinking); appendMsg('Error contacting server.', 'bot'); }
   }
 
-  chatSend.addEventListener('click', ()=>{ const q=chatInput.value.trim(); if(!q) return; pushUserMessage(q); chatInput.value=''; sendChatQuestion(q); });
-  chatInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') chatSend.click(); });
-  clearChat.addEventListener('click', ()=>{ chatBody.innerHTML=''; appendMessage('<strong>Hello — I can answer questions about the uploaded document. Try: "What happens if seller defaults?"</strong>'); });
-
-  // quick action buttons
-  document.getElementById('quick1').addEventListener('click', ()=>{ if(!lastData) return alert('Upload a document first'); const q = summarizeByLabel('Con'); pushUserMessage('Summarize risks:'); sendChatQuestion(q); });
-  document.getElementById('quick2').addEventListener('click', ()=>{ if(!lastData) return alert('Upload a document first'); const q = summarizeByLabel('Pro'); pushUserMessage('List favorable clauses:'); sendChatQuestion(q); });
-  document.getElementById('quick3').addEventListener('click', ()=>{ if(!lastData) return alert('Upload a document first'); const q = findKeywordClauses('return the whole advance'); pushUserMessage('Find refund clauses:'); sendChatQuestion(q); });
-
-  document.getElementById('summarizeWrong').addEventListener('click', ()=>{ if(!lastData) return alert('Upload a document first'); const text = summarizeByLabel('Con'); // show quick in chat
-    pushUserMessage('What are the main risks?'); sendChatQuestion(text);
-  });
-  document.getElementById('summarizeRight').addEventListener('click', ()=>{ if(!lastData) return alert('Upload a document first'); const text = summarizeByLabel('Pro'); pushUserMessage('What protections exist in the contract?'); sendChatQuestion(text);
+  chatSend.addEventListener('click', () => {
+    const q = chatInput.value.trim(); if (!q) return;
+    appendMsg(escHtml(q), 'user'); chatInput.value = ''; sendQuestion(q);
   });
 
-  function summarizeByLabel(label){ if(!lastData) return 'No document uploaded'; const hits = lastData.results.filter(r=>r.label===label); if(!hits.length) return `No ${label} clauses found.`; return hits.map(r=>`Clause ${r.clause_id}: ${truncate(r.original,180)}`).join('\n\n'); }
-  function findKeywordClauses(keyword){ if(!lastData) return 'No document uploaded'; const hits = lastData.results.filter(r=> (r.original||'').toLowerCase().includes(keyword.toLowerCase())); if(!hits.length) return `No clauses mentioning ${keyword}`; return hits.map(r=>`Clause ${r.clause_id}: ${truncate(r.original,220)}`).join('\n\n'); }
+  chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') chatSend.click(); });
 
-  // translation helper (calls backend /translate)
-  async function backendTranslate(text,target){ const res = await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text, target})}); if(!res.ok) throw new Error('Translation failed'); const d=await res.json(); return d.translatedText }
+  clearChat.addEventListener('click', () => {
+    chatMessages.innerHTML = '';
+    appendMsg('Chat cleared. Upload a document and ask me anything about it.', 'bot');
+  });
 
-  // TTS helper
-  async function speakText(text){ try{ const lang = document.getElementById('langSelect').value || 'en'; const res = await fetch('/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text, lang})}); if(!res.ok) throw new Error('TTS failed'); const blob = await res.blob(); const url = URL.createObjectURL(blob); const audio = new Audio(url); audio.play(); audio.onended = ()=>URL.revokeObjectURL(url); }catch(e){ alert('Audio unavailable'); console.error(e);} }
+  speakAnswerBtn.addEventListener('click', () => { if (lastAnswer) speakText(lastAnswer); });
 
-  // initial assistant greeting
-  appendMessage('<strong>Hello — I can explain clauses and point out risks. Upload a document to get started.</strong>');
+  // Quick pills
+  document.getElementById('quick1').addEventListener('click', () => {
+    if (!lastData) { alert('Upload a document first'); return; }
+    const hits = lastData.results.filter(r => r.label === 'Con');
+    const q = hits.length ? 'Summarize the main risks: ' + hits.map(r=>`Clause ${r.clause_id}: ${truncate(r.original,120)}`).join(' | ') : 'No risky clauses found.';
+    appendMsg('⚠ Summarize risks', 'user'); sendQuestion(q);
+  });
 
-  // expose some functions to console for debugging
-  window.backendTranslate = backendTranslate; window.speakText = speakText; window.lastData = () => lastData;
+  document.getElementById('quick2').addEventListener('click', () => {
+    if (!lastData) { alert('Upload a document first'); return; }
+    const hits = lastData.results.filter(r => r.label === 'Pro');
+    const q = hits.length ? 'List the favorable clauses: ' + hits.map(r=>`Clause ${r.clause_id}: ${truncate(r.original,120)}`).join(' | ') : 'No favorable clauses found.';
+    appendMsg('✓ Favorable clauses', 'user'); sendQuestion(q);
+  });
+
+  document.getElementById('quick3').addEventListener('click', () => {
+    if (!lastData) { alert('Upload a document first'); return; }
+    appendMsg('📋 Termination terms', 'user'); sendQuestion('What are the termination terms and conditions in this contract?');
+  });
+
+  // ===== TTS =====
+  async function speakText(text) {
+    try {
+      const lang = document.getElementById('langSelect').value || 'en';
+      const res = await fetch('/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, lang}) });
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.play();
+      audio.onended = () => URL.revokeObjectURL(url);
+    } catch(e) { alert('Audio unavailable'); }
+  }
+
+  // ===== UTILS =====
+  function escHtml(t) {
+    if (!t) return '';
+    return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  function truncate(s, n) { return s && s.length > n ? s.slice(0, n) + '…' : s; }
+
+  // Initial greeting
+  appendMsg('Hello! Upload a contract to get started. I\'ll identify risky clauses, suggest amendments, and answer your questions.', 'bot');
 
 })();
 </script>

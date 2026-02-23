@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from gtts import gTTS
 from io import BytesIO
 
 router = APIRouter()
-translator = Translator()
+
 
 # -----------------------------
 # TRANSLATION (Google Translate)
@@ -19,9 +19,9 @@ async def translate(payload: dict):
         raise HTTPException(status_code=400, detail="text required")
 
     try:
-        result = translator.translate(text, dest=target)
+        result = GoogleTranslator(source='auto', target=target).translate(text)
         return JSONResponse(content={
-            "translatedText": result.text,
+            "translatedText": result,
             "source": "googletrans"
         })
     except Exception as e:

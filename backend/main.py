@@ -8,10 +8,7 @@ from .clause_parser import extract_text_from_upload, split_into_clauses
 from .pipeline import run_pipeline
 from fastapi.responses import FileResponse
 from .translate_api import router as translate_router
-
-from .rag import router as rag_router, vecstore  
-
-
+from .rag import router as rag_router, vecstore
 
 app = FastAPI(title="Legal Clause Analyzer API")
 
@@ -21,7 +18,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Serve frontend static files from ../frontend
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
 
@@ -33,14 +30,11 @@ app.include_router(rag_router, tags=["qa"])
 def serve_frontend():
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
-
-
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
     raw_text = extract_text_from_upload(file)
     clauses = split_into_clauses(raw_text)
 
-    # 🔴 CLEAR OLD DOCUMENT + INDEX NEW ONE
     vecstore.clear()
     vecstore.add_clauses(clauses)
 
@@ -51,8 +45,6 @@ async def upload(file: UploadFile = File(...)):
         "clauses": clauses,
         "results": results
     }
-
-
 
 if __name__ == "__main__":
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
