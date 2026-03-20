@@ -26,3 +26,15 @@ gTTS==2.5.4
 
 # HTTP (needed by deep-translator)
 httpx>=0.23.0
+
+# ─────────────────────────────────────────────
+# LexAnalyze — requirements.txt
+# ─────────────────────────────────────────────
+
+# ML / embeddings
+
+# Indian Constitution dataset loader
+datasets==2.19.1
+huggingface-hub==0.23.2
+
+gtts==2.5.1

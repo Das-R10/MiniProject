@@ -1,0 +1,890 @@
+{
+  "session_id": "3346075f-a6f3-4f98-96ac-de80dad41186",
+  "num_clauses": 49,
+  "clauses": [
+    {
+      "clause_id": "1.1",
+      "section": "Unknown",
+      "text": "\"Services\" means the software development, maintenance, and support services described in Schedule A attached hereto and forming part of this Agreement.",
+      "position": 1,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "1.2",
+      "section": "Unknown",
+      "text": "\"Deliverables\" means all work products, reports, software, documentation, and other materials produced by the Service Provider in connection with the Services.",
+      "position": 2,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "1.3",
+      "section": "Unknown",
+      "text": "\"Confidential Information\" means any non-public information disclosed by either party to the other in connection with this Agreement, including but not limited to technical data, trade secrets, business plans, and financial information.",
+      "position": 3,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "1.4",
+      "section": "Unknown",
+      "text": "\"Intellectual Property Rights\" means all patents, copyrights, trademarks, trade secrets, and other proprietary rights arising under applicable law.",
+      "position": 4,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "1.5",
+      "section": "Unknown",
+      "text": "\"Force Majeure Event\" means any event beyond the reasonable control of either party including acts of God, natural disasters, wars, pandemics, government actions, or failure of third-party infrastructure.",
+      "position": 5,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "2.1",
+      "section": "Unknown",
+      "text": "The Service Provider shall provide the Services as described in Schedule A in a professional and workmanlike manner, consistent with industry standards.",
+      "position": 6,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "2.2",
+      "section": "Unknown",
+      "text": "The Service Provider shall assign qualified personnel to perform the Services and shall notify the Client in advance of any changes to key personnel assigned to this engagement.",
+      "position": 7,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "2.3",
+      "section": "Unknown",
+      "text": "The Client shall provide the Service Provider with timely access to relevant systems, data, and personnel necessary for the performance of the Services.",
+      "position": 8,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "2.4",
+      "section": "Unknown",
+      "text": "Any additional services requested by the Client beyond the scope defined in Schedule A shall be subject to a separate written change order agreed and signed by both parties, specifying the scope, timeline, and additional fees.",
+      "position": 9,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "3.1",
+      "section": "Unknown",
+      "text": "The Client shall pay the Service Provider a monthly fee of Indian Rupees Two Lakhs (INR 2,00,000) for the Services, payable within thirty (30) days of receipt of a valid invoice.",
+      "position": 10,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "3.2",
+      "section": "Unknown",
+      "text": "All payments shall be made by electronic bank transfer to the account designated by the Service Provider in writing from time to time.",
+      "position": 11,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "3.3",
+      "section": "Unknown",
+      "text": "In the event of any delay in payment beyond the due date, the Client shall be liable to pay interest at the rate of eighteen percent (18%) per annum on the outstanding amount, calculated from the due date until the date of actual payment.",
+      "position": 12,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "3.4",
+      "section": "Unknown",
+      "text": "The Service Provider reserves the right to suspend Services immediately upon sixty (60) days of non-payment without any liability to the Client for losses arising from such suspension.",
+      "position": 13,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "3.5",
+      "section": "Unknown",
+      "text": "All fees are exclusive of applicable Goods and Services Tax (GST) and other statutory levies, which shall be payable by the Client in addition to the fees.",
+      "position": 14,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "4.1",
+      "section": "Unknown",
+      "text": "All Deliverables created by the Service Provider specifically for the Client under this Agreement shall, upon full payment of all fees, vest in and become the exclusive property of the Client.",
+      "position": 15,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "4.2",
+      "section": "Unknown",
+      "text": "The Service Provider shall retain ownership of all pre-existing intellectual property, tools, frameworks, and methodologies used in the delivery of Services. The Service Provider hereby grants the Client a non-exclusive, non-transferable, royalty-free licence to use such pre-existing IP solely for the purpose of utilising the Deliverables.",
+      "position": 16,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "4.3",
+      "section": "Unknown",
+      "text": "Each party shall retain ownership of its own background intellectual property and nothing in this Agreement shall be construed to transfer any rights in such background IP to the other party.",
+      "position": 17,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "5.1",
+      "section": "Unknown",
+      "text": "Each party agrees to keep the other party's Confidential Information strictly confidential and not to disclose it to any third party without the prior written consent of the disclosing party.",
+      "position": 18,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "5.2",
+      "section": "Unknown",
+      "text": "Each party may disclose Confidential Information to its employees and contractors on a need-to-know basis, provided such persons are bound by confidentiality obligations no less stringent than those set forth herein.",
+      "position": 19,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "5.3",
+      "section": "Unknown",
+      "text": "The obligations of confidentiality shall not apply to information that is or becomes publicly available through no fault of the receiving party, or that is independently developed by the receiving party without use of the disclosing party's Confidential Information.",
+      "position": 20,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "5.4",
+      "section": "Unknown",
+      "text": "The confidentiality obligations under this Clause shall survive termination of this Agreement for a period of three (3) years.",
+      "position": 21,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "6.1",
+      "section": "Unknown",
+      "text": "The Service Provider warrants that the Services will be performed in a professional manner consistent with applicable industry standards and that the Deliverables will materially conform to the specifications agreed in Schedule A.",
+      "position": 22,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "6.2",
+      "section": "Unknown",
+      "text": "The Service Provider warrants that it has the legal right to enter into this Agreement and to provide the Services without infringing any third-party intellectual property rights.",
+      "position": 23,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "6.3",
+      "section": "Unknown",
+      "text": "THE SERVICE PROVIDER EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW.",
+      "position": 24,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "6.4",
+      "section": "Unknown",
+      "text": "The Client warrants that it has the legal right and authority to provide the Service Provider with access to all systems, data, and materials necessary for the performance of the Services.",
+      "position": 25,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "7.1",
+      "section": "Unknown",
+      "text": "In no event shall either party be liable to the other for any indirect, incidental, consequential, special, or punitive damages arising out of or in connection with this Agreement, even if advised of the possibility of such damages.",
+      "position": 26,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "7.2",
+      "section": "Unknown",
+      "text": "The total aggregate liability of the Service Provider to the Client under or in connection with this Agreement shall in no circumstances exceed the total fees paid by the Client to the Service Provider in the three (3) months immediately preceding the event giving rise to the claim.",
+      "position": 27,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "7.3",
+      "section": "Unknown",
+      "text": "The limitation of liability in Clause 7.2 shall not apply in cases of fraud, wilful misconduct, or gross negligence on the part of the Service Provider.",
+      "position": 28,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "8.1",
+      "section": "Unknown",
+      "text": "This Agreement shall commence on the date first written above and shall continue for an initial term of twelve (12) months, unless earlier terminated in accordance with the provisions hereof.",
+      "position": 29,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "8.2",
+      "section": "Unknown",
+      "text": "Either party may terminate this Agreement without cause by providing sixty (60) days prior written notice to the other party.",
+      "position": 30,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "8.3",
+      "section": "Unknown",
+      "text": "Either party may terminate this Agreement with immediate effect by written notice if the other party commits a material breach of this Agreement and fails to remedy such breach within thirty (30) days of receiving written notice specifying the breach.",
+      "position": 31,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "8.4",
+      "section": "Unknown",
+      "text": "The Client may terminate this Agreement immediately and without notice if the Service Provider becomes insolvent, makes an assignment for the benefit of creditors, or if insolvency proceedings are initiated against it.",
+      "position": 32,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "8.5",
+      "section": "Unknown",
+      "text": "Upon termination for any reason, the Service Provider shall deliver all completed Deliverables to the Client, and the Client shall pay for all Services rendered up to the date of termination on a pro-rata basis.",
+      "position": 33,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "9.1",
+      "section": "Unknown",
+      "text": "The parties shall attempt to resolve any dispute arising out of or in connection with this Agreement through good faith negotiations between senior representatives of both parties.",
+      "position": 34,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "9.2",
+      "section": "Unknown",
+      "text": "If the dispute is not resolved within thirty (30) days of written notice of the dispute by either party, either party may refer the matter to mediation under the rules of the Indian Council of Arbitration.",
+      "position": 35,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "9.3",
+      "section": "Unknown",
+      "text": "If mediation fails within forty-five (45) days of appointment of the mediator, the dispute shall be referred to and finally resolved by arbitration under the Arbitration and Conciliation Act, 1996. The arbitration shall be conducted in Pune by a sole arbitrator appointed by mutual agreement.",
+      "position": 36,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "9.4",
+      "section": "Unknown",
+      "text": "The arbitral award shall be final and binding on both parties. The costs of arbitration shall be borne equally by both parties unless the arbitrator decides otherwise.",
+      "position": 37,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "10.1",
+      "section": "Unknown",
+      "text": "Neither party shall be liable for any failure or delay in performance of its obligations under this Agreement to the extent caused by a Force Majeure Event, provided the affected party gives prompt written notice to the other party and takes all reasonable steps to mitigate the effects.",
+      "position": 38,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "10.2",
+      "section": "Unknown",
+      "text": "If a Force Majeure Event continues for a period exceeding ninety (90) days, either party shall have the right to terminate this Agreement by written notice with immediate effect, without any liability to the other party for such termination.",
+      "position": 39,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "11.1",
+      "section": "Unknown",
+      "text": "The Service Provider shall indemnify and hold harmless the Client from and against any third-party claims arising from the Service Provider's infringement of third-party intellectual property rights in connection with the Deliverables.",
+      "position": 40,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "11.2",
+      "section": "Unknown",
+      "text": "The Client shall indemnify and hold harmless the Service Provider from and against any third-party claims arising from the Client's use of the Deliverables in a manner not authorised under this Agreement.",
+      "position": 41,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "11.3",
+      "section": "Unknown",
+      "text": "The indemnifying party's obligations under this Clause are subject to the indemnified party promptly notifying the indemnifying party of any claim, cooperating fully in the defence, and not making any admission without the indemnifying party's prior written consent.",
+      "position": 42,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "12.1",
+      "section": "Unknown",
+      "text": "This Agreement shall be governed by and construed in accordance with the laws of India, without reference to its conflict of laws principles.",
+      "position": 43,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "12.2",
+      "section": "Unknown",
+      "text": "Subject to the dispute resolution provisions in Clause 9, the courts at Pune shall have exclusive jurisdiction over any disputes arising under this Agreement.",
+      "position": 44,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "13.1",
+      "section": "Unknown",
+      "text": "This Agreement, together with Schedule A, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior agreements, representations, and understandings.",
+      "position": 45,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "13.2",
+      "section": "Unknown",
+      "text": "No amendment to this Agreement shall be valid unless it is in writing and signed by authorised representatives of both parties.",
+      "position": 46,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "13.3",
+      "section": "Unknown",
+      "text": "If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.",
+      "position": 47,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "13.4",
+      "section": "Unknown",
+      "text": "Neither party may assign this Agreement or any rights hereunder without the prior written consent of the other party, which consent shall not be unreasonably withheld.",
+      "position": 48,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    },
+    {
+      "clause_id": "13.5",
+      "section": "Unknown",
+      "text": "The failure of either party to exercise any right or remedy under this Agreement shall not constitute a waiver of such right or remedy.\n\nIN WITNESS WHEREOF the parties have executed this Agreement as of the date first written above.\n\nFor Bharat Retail Solutions Private Limited:\n\nSignature: ___________________________\nName: Mr. Vikram Desai\nDesignation: Chief Executive Officer\nDate: 15/01/2024\n\nFor TechServe India LLP:\n\nSignature: ___________________________\nName: Ms. Priya Nair\nDesignation: Managing Partner\nDate: 15/01/2024",
+      "position": 49,
+      "page_no": 0,
+      "layout_type": "paragraph",
+      "font_size": 11,
+      "language": "en"
+    }
+  ],
+  "results": [
+    {
+      "clause_id": "1.1",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "\"Services\" means the software development, maintenance, and support services described in Schedule A attached hereto and forming part of this Agreement.",
+      "amended": null
+    },
+    {
+      "clause_id": "1.2",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "\"Deliverables\" means all work products, reports, software, documentation, and other materials produced by the Service Provider in connection with the Services.",
+      "amended": null
+    },
+    {
+      "clause_id": "1.3",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.25,
+      "original": "\"Confidential Information\" means any non-public information disclosed by either party to the other in connection with this Agreement, including but not limited to technical data, trade secrets, business plans, and financial information.",
+      "amended": null
+    },
+    {
+      "clause_id": "1.4",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "\"Intellectual Property Rights\" means all patents, copyrights, trademarks, trade secrets, and other proprietary rights arising under applicable law.",
+      "amended": null
+    },
+    {
+      "clause_id": "1.5",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.5,
+      "original": "\"Force Majeure Event\" means any event beyond the reasonable control of either party including acts of God, natural disasters, wars, pandemics, government actions, or failure of third-party infrastructure.",
+      "amended": null
+    },
+    {
+      "clause_id": "2.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.25,
+      "original": "The Service Provider shall provide the Services as described in Schedule A in a professional and workmanlike manner, consistent with industry standards.",
+      "amended": null
+    },
+    {
+      "clause_id": "2.2",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "The Service Provider shall assign qualified personnel to perform the Services and shall notify the Client in advance of any changes to key personnel assigned to this engagement.",
+      "amended": null
+    },
+    {
+      "clause_id": "2.3",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "The Client shall provide the Service Provider with timely access to relevant systems, data, and personnel necessary for the performance of the Services.",
+      "amended": null
+    },
+    {
+      "clause_id": "2.4",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.5833,
+      "original": "Any additional services requested by the Client beyond the scope defined in Schedule A shall be subject to a separate written change order agreed and signed by both parties, specifying the scope, timeline, and additional fees.",
+      "amended": null
+    },
+    {
+      "clause_id": "3.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.3333,
+      "original": "The Client shall pay the Service Provider a monthly fee of Indian Rupees Two Lakhs (INR 2,00,000) for the Services, payable within thirty (30) days of receipt of a valid invoice.",
+      "amended": null
+    },
+    {
+      "clause_id": "3.2",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "All payments shall be made by electronic bank transfer to the account designated by the Service Provider in writing from time to time.",
+      "amended": null
+    },
+    {
+      "clause_id": "3.3",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "In the event of any delay in payment beyond the due date, the Client shall be liable to pay interest at the rate of eighteen percent (18%) per annum on the outstanding amount, calculated from the due date until the date of actual payment.",
+      "amended": null
+    },
+    {
+      "clause_id": "3.4",
+      "section": "Unknown",
+      "label": "Con",
+      "confidence": 0.4833,
+      "original": "The Service Provider reserves the right to suspend Services immediately upon sixty (60) days of non-payment without any liability to the Client for losses arising from such suspension.",
+      "amended": "The Service Provider reserves the right to suspend Services immediately upon sixty (60) days of non-payment without any liability to the Client for losses arising from such suspension, only after written notice and opportunity for the employee to respond, with subsistence allowance as per applicable rules."
+    },
+    {
+      "clause_id": "3.5",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "All fees are exclusive of applicable Goods and Services Tax (GST) and other statutory levies, which shall be payable by the Client in addition to the fees.",
+      "amended": null
+    },
+    {
+      "clause_id": "4.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "All Deliverables created by the Service Provider specifically for the Client under this Agreement shall, upon full payment of all fees, vest in and become the exclusive property of the Client.",
+      "amended": null
+    },
+    {
+      "clause_id": "4.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "The Service Provider shall retain ownership of all pre-existing intellectual property, tools, frameworks, and methodologies used in the delivery of Services. The Service Provider hereby grants the Client a non-exclusive, non-transferable, royalty-free licence to use such pre-existing IP solely for the purpose of utilising the Deliverables.",
+      "amended": null
+    },
+    {
+      "clause_id": "4.3",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.4167,
+      "original": "Each party shall retain ownership of its own background intellectual property and nothing in this Agreement shall be construed to transfer any rights in such background IP to the other party.",
+      "amended": null
+    },
+    {
+      "clause_id": "5.1",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "Each party agrees to keep the other party's Confidential Information strictly confidential and not to disclose it to any third party without the prior written consent of the disclosing party.",
+      "amended": null
+    },
+    {
+      "clause_id": "5.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.5,
+      "original": "Each party may disclose Confidential Information to its employees and contractors on a need-to-know basis, provided such persons are bound by confidentiality obligations no less stringent than those set forth herein.",
+      "amended": null
+    },
+    {
+      "clause_id": "5.3",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.5,
+      "original": "The obligations of confidentiality shall not apply to information that is or becomes publicly available through no fault of the receiving party, or that is independently developed by the receiving party without use of the disclosing party's Confidential Information.",
+      "amended": null
+    },
+    {
+      "clause_id": "5.4",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "The confidentiality obligations under this Clause shall survive termination of this Agreement for a period of three (3) years.",
+      "amended": null
+    },
+    {
+      "clause_id": "6.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.75,
+      "original": "The Service Provider warrants that the Services will be performed in a professional manner consistent with applicable industry standards and that the Deliverables will materially conform to the specifications agreed in Schedule A.",
+      "amended": null
+    },
+    {
+      "clause_id": "6.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.4167,
+      "original": "The Service Provider warrants that it has the legal right to enter into this Agreement and to provide the Services without infringing any third-party intellectual property rights.",
+      "amended": null
+    },
+    {
+      "clause_id": "6.3",
+      "section": "Unknown",
+      "label": "Con",
+      "confidence": 1,
+      "original": "THE SERVICE PROVIDER EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW.",
+      "amended": "THE SERVICE PROVIDER EXPRESSLY DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, with prior written notice and fair review, in accordance with applicable Indian labour law."
+    },
+    {
+      "clause_id": "6.4",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.25,
+      "original": "The Client warrants that it has the legal right and authority to provide the Service Provider with access to all systems, data, and materials necessary for the performance of the Services.",
+      "amended": null
+    },
+    {
+      "clause_id": "7.1",
+      "section": "Unknown",
+      "label": "Con",
+      "confidence": 1,
+      "original": "In no event shall either party be liable to the other for any indirect, incidental, consequential, special, or punitive damages arising out of or in connection with this Agreement, even if advised of the possibility of such damages.",
+      "amended": "In no event shall either party be liable to the other for any indirect, incidental, consequential, special, or punitive damages arising out of or in connection with this Agreement, even if advised of the possibility of such damages, with prior written notice and fair review, in accordance with applicable Indian labour law."
+    },
+    {
+      "clause_id": "7.2",
+      "section": "Unknown",
+      "label": "Con",
+      "confidence": 0.7,
+      "original": "The total aggregate liability of the Service Provider to the Client under or in connection with this Agreement shall in no circumstances exceed the total fees paid by the Client to the Service Provider in the three (3) months immediately preceding the event giving rise to the claim.",
+      "amended": "The total aggregate liability of the Service Provider to the Client under or in connection with this Agreement shall in no circumstances exceed the total fees paid by the Client to the Service Provider in the three (3) months immediately preceding the event giving rise to the claim, with prior written notice and fair review, in accordance with applicable Indian labour law."
+    },
+    {
+      "clause_id": "7.3",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "The limitation of liability in Clause 7.2 shall not apply in cases of fraud, wilful misconduct, or gross negligence on the part of the Service Provider.",
+      "amended": null
+    },
+    {
+      "clause_id": "8.1",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "This Agreement shall commence on the date first written above and shall continue for an initial term of twelve (12) months, unless earlier terminated in accordance with the provisions hereof.",
+      "amended": null
+    },
+    {
+      "clause_id": "8.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "Either party may terminate this Agreement without cause by providing sixty (60) days prior written notice to the other party.",
+      "amended": null
+    },
+    {
+      "clause_id": "8.3",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "Either party may terminate this Agreement with immediate effect by written notice if the other party commits a material breach of this Agreement and fails to remedy such breach within thirty (30) days of receiving written notice specifying the breach.",
+      "amended": null
+    },
+    {
+      "clause_id": "8.4",
+      "section": "Unknown",
+      "label": "Con",
+      "confidence": 0.5,
+      "original": "The Client may terminate this Agreement immediately and without notice if the Service Provider becomes insolvent, makes an assignment for the benefit of creditors, or if insolvency proceedings are initiated against it.",
+      "amended": "The Client may terminate this Agreement immediately and without notice if the Service Provider becomes insolvent, makes an assignment for the benefit of creditors, or if insolvency proceedings are initiated against it, only after providing prior written notice of at least 30 days or notice pay in lieu thereof, as per the Industrial Disputes Act."
+    },
+    {
+      "clause_id": "8.5",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.3333,
+      "original": "Upon termination for any reason, the Service Provider shall deliver all completed Deliverables to the Client, and the Client shall pay for all Services rendered up to the date of termination on a pro-rata basis.",
+      "amended": null
+    },
+    {
+      "clause_id": "9.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.8333,
+      "original": "The parties shall attempt to resolve any dispute arising out of or in connection with this Agreement through good faith negotiations between senior representatives of both parties.",
+      "amended": null
+    },
+    {
+      "clause_id": "9.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "If the dispute is not resolved within thirty (30) days of written notice of the dispute by either party, either party may refer the matter to mediation under the rules of the Indian Council of Arbitration.",
+      "amended": null
+    },
+    {
+      "clause_id": "9.3",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "If mediation fails within forty-five (45) days of appointment of the mediator, the dispute shall be referred to and finally resolved by arbitration under the Arbitration and Conciliation Act, 1996. The arbitration shall be conducted in Pune by a sole arbitrator appointed by mutual agreement.",
+      "amended": null
+    },
+    {
+      "clause_id": "9.4",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.5,
+      "original": "The arbitral award shall be final and binding on both parties. The costs of arbitration shall be borne equally by both parties unless the arbitrator decides otherwise.",
+      "amended": null
+    },
+    {
+      "clause_id": "10.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.8333,
+      "original": "Neither party shall be liable for any failure or delay in performance of its obligations under this Agreement to the extent caused by a Force Majeure Event, provided the affected party gives prompt written notice to the other party and takes all reasonable steps to mitigate the effects.",
+      "amended": null
+    },
+    {
+      "clause_id": "10.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.6667,
+      "original": "If a Force Majeure Event continues for a period exceeding ninety (90) days, either party shall have the right to terminate this Agreement by written notice with immediate effect, without any liability to the other party for such termination.",
+      "amended": null
+    },
+    {
+      "clause_id": "11.1",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "The Service Provider shall indemnify and hold harmless the Client from and against any third-party claims arising from the Service Provider's infringement of third-party intellectual property rights in connection with the Deliverables.",
+      "amended": null
+    },
+    {
+      "clause_id": "11.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.25,
+      "original": "The Client shall indemnify and hold harmless the Service Provider from and against any third-party claims arising from the Client's use of the Deliverables in a manner not authorised under this Agreement.",
+      "amended": null
+    },
+    {
+      "clause_id": "11.3",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "The indemnifying party's obligations under this Clause are subject to the indemnified party promptly notifying the indemnifying party of any claim, cooperating fully in the defence, and not making any admission without the indemnifying party's prior written consent.",
+      "amended": null
+    },
+    {
+      "clause_id": "12.1",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "This Agreement shall be governed by and construed in accordance with the laws of India, without reference to its conflict of laws principles.",
+      "amended": null
+    },
+    {
+      "clause_id": "12.2",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "Subject to the dispute resolution provisions in Clause 9, the courts at Pune shall have exclusive jurisdiction over any disputes arising under this Agreement.",
+      "amended": null
+    },
+    {
+      "clause_id": "13.1",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "This Agreement, together with Schedule A, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior agreements, representations, and understandings.",
+      "amended": null
+    },
+    {
+      "clause_id": "13.2",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 0.8333,
+      "original": "No amendment to this Agreement shall be valid unless it is in writing and signed by authorised representatives of both parties.",
+      "amended": null
+    },
+    {
+      "clause_id": "13.3",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.",
+      "amended": null
+    },
+    {
+      "clause_id": "13.4",
+      "section": "Unknown",
+      "label": "Pro",
+      "confidence": 1,
+      "original": "Neither party may assign this Agreement or any rights hereunder without the prior written consent of the other party, which consent shall not be unreasonably withheld.",
+      "amended": null
+    },
+    {
+      "clause_id": "13.5",
+      "section": "Unknown",
+      "label": "Neutral",
+      "confidence": 0.3,
+      "original": "The failure of either party to exercise any right or remedy under this Agreement shall not constitute a waiver of such right or remedy.\n\nIN WITNESS WHEREOF the parties have executed this Agreement as of the date first written above.\n\nFor Bharat Retail Solutions Private Limited:\n\nSignature: ___________________________\nName: Mr. Vikram Desai\nDesignation: Chief Executive Officer\nDate: 15/01/2024\n\nFor TechServe India LLP:\n\nSignature: ___________________________\nName: Ms. Priya Nair\nDesignation: Managing Partner\nDate: 15/01/2024",
+      "amended": null
+    }
+  ]
+}

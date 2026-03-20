@@ -932,6 +932,7 @@
   let lastData = null;
   let lastAnswer = '';
   let currentFilter = 'all';
+  let sessionId = '';
 
   // ===== UPLOAD HANDLERS =====
   chooseBtn.addEventListener('click', () => fileInput.click());
@@ -976,6 +977,7 @@
       if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
       lastData = data;
+      sessionId = data.session_id || '';
       renderStats(data);
       renderResults(data.results, 'all');
       appendMsg('Document analyzed! Ask me anything about the clauses.', 'bot');
@@ -1109,7 +1111,7 @@
     if (!q) return;
     const thinking = appendMsg('<em>Thinking…</em>', 'thinking');
     try {
-      const res = await fetch('/qa', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question: q}) });
+      const res = await fetch('/qa', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question: q, session_id: sessionId}) });
       const data = await res.json();
       chatMessages.removeChild(thinking);
       if (!data.answer) { appendMsg('No relevant information found in the document.', 'bot'); return; }
@@ -1118,7 +1120,10 @@
       (data.evidence || []).forEach(ev => {
         const e = document.createElement('div');
         e.className = 'msg evidence';
-        e.innerHTML = `<div class="evidence-ref">Ref §${ev.clause_id} · ${Math.round(ev.score*100)}% match</div><div>${escHtml(truncate(ev.text, 200))}</div>`;
+        const sourceTag = ev.source === 'constitution'
+          ? '<span style="background:rgba(246,201,14,0.15);color:#f6c90e;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:6px;">🏛 Constitution</span>'
+          : '<span style="background:rgba(99,179,237,0.1);color:#63b3ed;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:6px;">📄 Contract</span>';
+        e.innerHTML = `<div class="evidence-ref">${sourceTag}Ref §${ev.clause_id} · ${Math.round(ev.score*100)}% match</div><div>${escHtml(truncate(ev.text, 200))}</div>`;
         chatMessages.appendChild(e);
       });
       chatMessages.scrollTop = chatMessages.scrollHeight;
